@@ -1,0 +1,19 @@
+#!/bin/bash
+
+prompt() { echo "# $@ (hit enter)"; read; }
+echopen() { echo "# Opening: $@"; open "$@"; }
+has() { type $1 &>/dev/null; }
+
+# http://kennethreitz.com/xcode-gcc-and-homebrew.html
+if ! has clang; then
+    echopen http://developer.apple.com/downloads
+    prompt 'Sign up as an "Apple Developer" and get the "Command Line Tools for Xcode"'
+fi
+
+if ! type brew &>/dev/null; then
+    curl https://raw.github.com/mxcl/homebrew/go | ruby
+    brew doctor
+fi
+
+prompt "About to install a bunch of (almost essential) packages - cancel with ^c"
+,mac-basic-pack

@@ -1,0 +1,13 @@
+#!/bin/sh
+wanted="\
+ openssl readline libyaml gdbm libffi \
+ python \
+ mercurial vim \
+ tmux \
+ urxvt \
+ the_silver_searcher \
+ mobile-shell wget \
+ keychain \
+ tig \
+"
+brew install $wanted
