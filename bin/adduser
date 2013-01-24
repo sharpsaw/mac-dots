@@ -1,0 +1,61 @@
+#!/bin/bash
+## Add User on the OSX Command Line
+# From: http://wiki.freegeek.org/index.php/Mac_OSX_adduser_script
+
+# Although I wrote this for 10.7 Lion Server, these commands have been the same since 10.5 Leopard.
+# It's pretty simple as it uses and strings together the (rustic and ancient) commands that OSX 
+# already uses to add users.
+
+sudo true
+
+echo -n "Enter your desired user name: "; read USERNAME
+echo -n "Enter a full name for this user: "; read FULLNAME
+echo -n "Enter a password for this user: "; read -s PASSWORD; echo
+
+# A list of (secondary) groups the user should belong to
+# This makes the difference between admin and non-admin users.
+
+echo -n "Is this an administrative user? (y/n) "
+read GROUP_ADD
+
+if [ "$GROUP_ADD" = n ] ; then
+    SECONDARY_GROUPS="staff"  # for a non-admin user
+elif [ "$GROUP_ADD" = y ] ; then
+    SECONDARY_GROUPS="admin _lpadmin _appserveradm _appserverusr" # for an admin user
+else
+    echo "You did not make a valid selection!"
+fi
+
+# Create a UID that is not currently in use
+echo "Creating an unused UID for new user..."
+
+# Find out the next available user ID
+MAXID=$(sudo dscl . -list /Users UniqueID | awk '{print $2}' | sort -ug | tail -1)
+USERID=$((MAXID+1))
+
+
+# Create the user account by running dscl (normally you would have to do each of these commands one
+# by one in an obnoxious and time consuming way.
+echo "Creating necessary files..."
+
+sudo dscl . -create /Users/$USERNAME
+sudo dscl . -create /Users/$USERNAME UserShell /bin/bash
+sudo dscl . -create /Users/$USERNAME RealName "$FULLNAME"
+sudo dscl . -create /Users/$USERNAME UniqueID "$USERID"
+sudo dscl . -create /Users/$USERNAME PrimaryGroupID 20
+sudo dscl . -create /Users/$USERNAME NFSHomeDirectory /Users/$USERNAME
+sudo dscl . -passwd /Users/$USERNAME $PASSWORD
+
+
+# Add user to any specified groups
+echo "Adding user to specified groups..."
+
+for GROUP in $SECONDARY_GROUPS ; do
+    sudo dseditgroup -o edit -t user -a $USERNAME $GROUP
+done
+
+# Create the home directory
+echo "Creating home directory..."
+sudo createhomedir -c 2>&1 | grep -v "shell-init"
+
+echo "Created user #$USERID: $USERNAME ($FULLNAME)"
