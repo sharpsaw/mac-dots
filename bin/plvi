@@ -1,0 +1,4 @@
+#!/bin/sh -e
+naggit "$1"
+plutil -convert json -r "$1"
+vi "$1"
