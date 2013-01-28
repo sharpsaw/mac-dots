@@ -17,6 +17,56 @@ sudo rm /var/vm/sleepimage
 #?#echo -n 'a' | sudo tee /private/var/db/.AccessibilityAPIEnabled &> /dev/null
 #?#sudo chmod 444 /private/var/db/.AccessibilityAPIEnabled
 
+#- Disable YAGNI Animations -------------------------------------
+# opening and closing windows and popovers
+defaults write -g NSAutomaticWindowAnimationsEnabled -bool false
+
+# smooth scrolling
+defaults write -g NSScrollAnimationEnabled -bool false
+
+# showing sheets, resizing preference windows, zooming windows
+defaults write -g NSWindowResizeTime -float 0.001
+
+# opening and closing Quick Look windows
+defaults write -g QLPanelAnimationDuration -float 0
+
+# rubberband scrolling (doesn't affect web views)
+defaults write -g NSScrollViewRubberbanding -bool false
+
+# resizing windows before and after showing the version browser
+defaults write -g NSDocumentRevisionsWindowTransformAnimation -bool false
+
+# showing the toolbar (and menu bar) in full screen
+defaults write -g NSToolbarFullScreenAnimationDuration -float 0
+
+# scrolling column views
+defaults write -g NSBrowserColumnAnimationSpeedMultiplier -float 0
+
+# showing the Dock
+defaults write com.apple.dock autohide-time-modifier -float 0
+defaults write com.apple.dock autohide-delay -float 0
+
+# showing and hiding Mission Control
+defaults write com.apple.dock expose-animation-duration -float 0
+
+# showing and hiding Launchpad
+defaults write com.apple.dock springboard-show-duration -float 0
+defaults write com.apple.dock springboard-hide-duration -float 0
+
+# changing pages in Launchpad
+defaults write com.apple.dock springboard-page-duration -float 0
+
+# at least AnimateInfoPanes and expanding sections in information panels
+defaults write com.apple.finder DisableAllAnimations -bool true
+
+# sending messages and opening windows for replies
+defaults write com.apple.Mail DisableSendAnimations -bool true
+defaults write com.apple.Mail DisableReplyAnimations -bool true
+
+defaults write com.apple.dock expose-animation-duration -float 0.2
+killall Dock
+
+#----------------------------------------------------------------
 
 # Expand save panel by default
 defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
@@ -49,7 +99,7 @@ defaults write com.apple.BezelServices kDimTime -int 300
 
 # Require password immediately after sleep or screen saver begins
 defaults write com.apple.screensaver askForPassword -int 1
-defaults write com.apple.screensaver askForPasswordDelay -int 100
+defaults write com.apple.screensaver askForPasswordDelay -int 1000
 
 # Save screenshots to the desktop
 defaults write com.apple.screencapture location -string "$HOME/Desktop"
