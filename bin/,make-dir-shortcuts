@@ -1,0 +1,18 @@
+#!/bin/zsh
+## Give terser names to the default dirs in $HOME
+cd
+typeset -A map
+map=(
+#Applications
+Desktop dtop
+Documents doc
+Downloads dl
+# Library
+Movies mov
+Music au
+Pictures img
+Public pub
+)
+for key in ${(k)map}; do
+    ( set -xe; ln -fs $key ${map[$key]} )
+done
