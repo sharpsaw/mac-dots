@@ -1,2 +1,4 @@
 # Homebrew likes this
 ...path-prepend /usr/local/bin
+# …but we also want this even higher:
+...path-prepend ~/bin
