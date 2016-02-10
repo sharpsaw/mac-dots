@@ -1,0 +1,2 @@
+# `top` on mac sorts by pid by default
+alias top="top -o cpu"
